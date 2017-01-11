@@ -8,6 +8,10 @@
  * are complicated and not particularly helpful, but they do *work*.
  * Don't take it as an example of my best work.
  * Running time about 13 minutes for me.
+ -------------------------------------------------
+ * forked this project on 11 Jan 2017
+ * on my PC it took about 8 minutes, but by altering productModQ
+ * I reduced it to about 75 seconds.
  */
 
 
@@ -57,62 +61,24 @@ void sieve() {
   }
 }
 
-/* Doesn't save time for our use case.
-// Short-circuiting evaluation.
-bool primePowerQ(int n) {
-  int factor = smallestFactor[n];
-  int n_left = next[n];
-  while (n_left > 1) {
-    if (smallestFactor[n_left] != factor) {
-      return false;
-    }
-    n_left = next[n_left];
-  }
-  return true;
-}
-*/
 
-bool primePowerQ(int n) {
-  return smallestFactor[n] == largestFactor[n];
-}
+
 
 /*
  * Returns whether x*y/n is a positive integer.
  * Assumes x, y, n are given as ints < MAX, and n>0.
+ * much simpler and faster than the original version.
+ * this simple change reduced the run time from about 8 minutes to
+ * 75 seconds.
  */
 int productModQ(int x, int y, int n) {
   // printf("productModQ: %d, %d, %d\n", x, y, n);
-  if (n==1) {
-    return true;
-  }
+  
   if (x == 0 && y == 0) {
     return false;
   }
-
-  int lx = largestFactor[x];
-  int ly = largestFactor[y];
-  int ln = largestFactor[n];
-
-  // printf("L: %d, %d, %d\n", lx, ly, ln);
-
-  if (ln > lx && ln > ly) {
-    return false;
-  }
-
-  if (lx == ln) {
-    return productModQ(largestNext[x], y, largestNext[n]);
-  }
-  if (lx > ln && x > 0) {
-    return productModQ(largestNext[x], y, n);
-  }
-  if (ly == ln) {
-    return productModQ(x, largestNext[y], largestNext[n]);
-  }
-  if (ly > ln && y > 0) {
-    return productModQ(x, largestNext[y], n);
-  }
-  return false;
-}
+	return ((long long)x*y%n == (long long)0);
+ }
 
 int largestIdempodent(int n) {
   int largest = largestFactor[n];
